@@ -7,8 +7,8 @@ from flask import Flask, request, send_file
 from fsm import TocMachine
 
 
-API_TOKEN = '298725671:AAF3JfYcUCAVLQ79OnUO3ucmdmFlPyPXSSE'
-WEBHOOK_URL = 'https://8aac429f.ngrok.io/hook'
+API_TOKEN = '390535074:AAGDcOJWg03kwA0kNdws3Dtv0IvNEyUkl4k'
+WEBHOOK_URL = 'https://c7220312.ngrok.io/hook'
 
 app = Flask(__name__)
 bot = telegram.Bot(token=API_TOKEN)
@@ -18,10 +18,14 @@ machine = TocMachine(
         'state1',
         'state2',
 		'state3',
+        'state4',
 	    'state1to1',
         'state1to2',
         'state2to1',
-        'state3to1'
+        'state3to1',
+        'state3to2',
+        'state4to1',
+        'state1to3'
     ],
     transitions=[
         {
@@ -42,6 +46,12 @@ machine = TocMachine(
             'dest': 'state3',
             'conditions': 'is_going_to_state3'
         },
+		{
+            'trigger': 'advance',
+            'source': 'user',
+            'dest': 'state4',
+            'conditions': 'is_going_to_state4'
+        },
         {
             'trigger': 'advance',
             'source': 'state1',
@@ -56,6 +66,12 @@ machine = TocMachine(
         },
         {
             'trigger': 'advance',
+            'source': 'state1to2',
+            'dest': 'state1to3',
+            'conditions': 'is_going_to_state1to3'
+        },
+        {
+            'trigger': 'advance',
             'source': 'state2',
             'dest': 'state2to1',
             'conditions': 'is_going_to_state2to1'
@@ -66,15 +82,61 @@ machine = TocMachine(
             'dest': 'state3to1',
             'conditions': 'is_going_to_state3to1'
         },
+		{
+            'trigger': 'advance',
+            'source': 'state3to1',
+            'dest': 'state3to2',
+            'conditions': 'is_going_to_state3to2'
+        },
+        {
+            'trigger': 'advance',
+            'source': 'state4',
+            'dest': 'state4to1',
+            'conditions': 'is_going_to_state4to1'
+        },
+		{
+            'trigger': 'advance',
+            'source': 'state4to1',
+            'dest': 'state2to1',
+            'conditions': 'is_going_to_state2to1'
+        },
+		{
+            'trigger': 'advance',
+            'source': 'state2',
+            'dest': 'state1to2',
+            'conditions': 'is_going_to_state1to2'
+        },
+		{
+            'trigger': 'advance',
+            'source': 'state1',
+            'dest': 'state3to2',
+            'conditions': 'is_going_to_state3to2'
+        },
+		{
+            'trigger': 'advance',
+            'source': 'user',
+            'dest': 'state3to2',
+            'conditions': 'is_going_to_state3to2'
+        },
+		{
+            'trigger': 'advance',
+            'source': 'state1to1',
+            'dest': 'state3to2',
+            'conditions': 'is_going_to_state3to2'
+        },
+		{
+            'trigger': 'advance',
+            'source': 'state2',
+            'dest': 'state3to2',
+            'conditions': 'is_going_to_state3to2'
+        },
         {
             'trigger': 'go_back',
             'source': [
-                'state1',
-                'state2',
-				'state3',
-				'state1to2',
+				'state1to3',
                 'state2to1',
-                'state3to1'
+                'state3to2'
+                
             ],
             'dest': 'user'
         }
